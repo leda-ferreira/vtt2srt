@@ -1,0 +1,30 @@
+{
+    "name": "ledat/vtt2srt",
+    "description": "A php command-line utility that converts Web Video Text Tracks files (.vtt) to SubRip Subtitle File (.srt)",
+    "homepage": "https://github.com/ledazinha/vtt2srt",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ledazinha/vtt2srt"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "authors": [
+        {
+            "name": "Leda Ferreira",
+            "email": "ledat.ferreira@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "license": "GPL-2.0",
+    "type": "library",
+    "keywords": ["subrip", "webvtt", "srt", "vtt"],
+    "autoload": {
+        "psr-4": {
+            "Ledat\\": "src"
+        }
+    },
+    "minimum-stability": "dev"
+}
