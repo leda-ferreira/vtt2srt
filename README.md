@@ -9,12 +9,16 @@ To my surprise, utilities that convert vtt files to srt are scarce. The one that
 
 The executables are at bin/ folder. To use it PHP command line executable is needed. Example of usage:
 
+```sh
 cd bin
 php vtt2srt.php "Dawn.of.the.Planet.of.the.Apes.2014.vtt" "Dawn.of.the.Planet.of.the.Apes.2014.srt"
+```
 
 For Windows users' convenience, a executable batch file is provided.
 
+```sh
 cd bin
 vtt2srt "Dawn.of.the.Planet.of.the.Apes.2014.vtt" "Dawn.of.the.Planet.of.the.Apes.2014.srt"
+```
 
 Hope it can be usefull to you. Have a nice day.
