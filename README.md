@@ -25,7 +25,7 @@ and if you wanna use in .php
 ```
 define('__ROOT__', dirname(dirname(__FILE__)));
 require_once(__ROOT__.'/projectname/Vtt2Srt.php');
-$convert = new \Fth\Vtt2Srt("Dawn.of.the.Planet.of.the.Apes.2014.vtt","Dawn.of.the.Planet.of.the.Apes.2014.srt");
+$convert = new \ledat\Vtt2Srt("Dawn.of.the.Planet.of.the.Apes.2014.vtt","Dawn.of.the.Planet.of.the.Apes.2014.srt");
 $convert->run();
 ```
 Hope it can be usefull to you. Have a nice day.
