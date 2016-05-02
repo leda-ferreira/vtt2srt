@@ -61,17 +61,17 @@ class Vtt2Srt
             $m1 = preg_match($pattern1, $line);
             if (is_numeric($m1) && $m1 > 0) {
                 $i++;
-                $output .= $i;
+                $output .= PHP_EOL . PHP_EOL . $i;
                 $output .= PHP_EOL;
-                $line = preg_replace($pattern1, '$1:$2:$3,$4', $line);
+                $line = preg_replace($pattern1, '$1:$2:$3,$4' , $line . PHP_EOL);
             }
             else {
                 $m2 = preg_match($pattern2, $line);
                 if (is_numeric($m2) && $m2 > 0) {
                     $i++;
-                    $output .= $i;
+                    $output .= PHP_EOL . PHP_EOL . $i;
                     $output .= PHP_EOL;
-                    $line = preg_replace($pattern2, '00:$1:$2,$3', $line);
+                    $line = preg_replace($pattern2, '00:$1:$2,$3', $line . PHP_EOL);
                 }
             }
 
