@@ -16,6 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
 namespace ledat;
 
 
@@ -43,10 +44,28 @@ class Vtt2Srt
         }
         return 1;
     }
+    private function removeHeader($lines)
+    {
+        // removes the WEBVTT header
+        // header is lines before the first empty line
+        // there are more than One line
+        $state = 0;
+        $ret = [];
+        foreach ($lines as $line) {
+            if (trim($line) === "") {
+                $state = 1;
+                continue;
+            }
+            if ($state) {
+                $ret[] = $line;
+            }
+        }
+        return $ret;
+    }
     private function convert($contents)
     {
         $lines = $this->split($contents);
-        array_shift($lines); // removes the WEBVTT header
+        $lines = $this->removeHeader($lines);
         $output = '';
         $i = 0;
         foreach ($lines as $line) {
@@ -54,28 +73,42 @@ class Vtt2Srt
              * at last version subtitle numbers are not working
              * as you can see that way is trustful than older
              *
-             *
              * */
-            $pattern1 = '#(\d{2}):(\d{2}):(\d{2})\.(\d{3})#'; // '01:52:52.554'
-            $pattern2 = '#(\d{2}):(\d{2})\.(\d{3})#'; // '00:08.301'
-            $m1 = preg_match($pattern1, $line);
+            $pattern1 = '(\d{2}):(\d{2}):(\d{2})\.(\d{3})'; // '01:52:52.554'
+            $pattern2 = '(\d{2}):(\d{2})\.(\d{3})'; // '00:08.301'
+            /**
+             * Well, it seems that the time line is far more complex than we think before.
+             * For example: 00:00:00.060 --> 00:00:04.490 align:start position:0%
+             * so we trim the modifiers after time line
+             */
+            $modifyPattern = '/ [a-zA-Z]\w*:\S+/';
+            /**
+             * vtt allow inner time tag, for example:
+             * there<00:00:00.359><c> we</c><00:00:00.420><c> go</c>
+             * we add ^ to avoid this preg match these inner time tag
+             */
+            $m1 = preg_match("/^$pattern1/", $line);
             if (is_numeric($m1) && $m1 > 0) {
                 $i++;
-                $output .= $i;
+                $output .= PHP_EOL . $i; // we'd better add an empty line, to make Aegisub happy
                 $output .= PHP_EOL;
-                $line = preg_replace($pattern1, '$1:$2:$3,$4' , $line);
-            }
-            else {
-                $m2 = preg_match($pattern2, $line);
+                $line = preg_replace("/$pattern1/", '$1:$2:$3,$4', $line);
+                $line = preg_replace($modifyPattern, '', $line);
+            } else {
+                $m2 = preg_match("/^$pattern2/", $line);
                 if (is_numeric($m2) && $m2 > 0) {
                     $i++;
-                    $output .= $i;
+                    $output .= PHP_EOL . $i;
                     $output .= PHP_EOL;
-                    $line = preg_replace($pattern2, '00:$1:$2,$3', $line);
+                    $line = preg_replace("/$pattern2/", '00:$1:$2,$3', $line);
+                    $line = preg_replace($modifyPattern, '', $line);
                 }
             }
-
-            $output .= $line . PHP_EOL;
+            /**
+             * we trim all inner tag because time tag is very annoying,
+             * maybe we will convert tag perfectly in the future.
+             */
+            $output .= strip_tags($line) . PHP_EOL;
         }
         return $output;
     }
